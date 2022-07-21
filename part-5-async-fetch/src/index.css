@@ -29,7 +29,7 @@ body
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: blue;
+    background-color: darkslateblue;
 }
 
 .navigation .Link
@@ -62,5 +62,15 @@ body
 {   padding: 0 50px;
     width: 30%;
 }
+
+.post 
+{
+    width: 30%;
+    margin: 5px 0;
+    border-bottom: 1px solid gray;
+}
+
+
+
 
 

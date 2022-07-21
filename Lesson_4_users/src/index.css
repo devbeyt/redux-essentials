@@ -29,7 +29,7 @@ body
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: blue;
+    background-color: darkslateblue;
 }
 
 .navigation .Link

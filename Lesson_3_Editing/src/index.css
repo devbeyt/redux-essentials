@@ -29,7 +29,7 @@ body
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: blue;
+    background-color: darkslateblue;
 }
 
 .navigation .Link
@@ -48,3 +48,19 @@ body
     justify-content: center;
     align-items: center;
 }
+
+
+
+.editPostForm,
+.editPostForm > form
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.editPostForm
+{   padding: 0 50px;
+    width: 30%;
+}
+
+
