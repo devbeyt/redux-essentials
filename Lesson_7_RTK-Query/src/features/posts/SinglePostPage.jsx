@@ -4,27 +4,25 @@ import { useGetPostQuery } from '../api/apiSlice';
 
 function SinglePostPage() {
     const {postId} = useParams();
+
     const { data: post, isFetching, isSuccess } = useGetPostQuery(postId)
 
-    let content
-    if (isFetching) {
-      content = <h1>Loading...</h1>
-    } else if (isSuccess) {
-      content = (
-        <article className="post">
-            <h1>Single Post page</h1>
-        <h3>{post.title}</h3>
-        <p>{post.content}</p>
-        <NavLink to={`/editPost/${post.id}`}>
-          Edit Post
-        </NavLink>
-        </article>
-      )
-    }
-
+    let renderedPost
+    if(isFetching){
+      renderedPost = <h1>Loading..</h1>
+    }else if(isSuccess)(
+      renderedPost =  <div>
+      <h1>Single Post page</h1>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+      <NavLink to={`/editPost/${post.id}`}>
+        Edit Post
+      </NavLink>
+    </div>
+    )
   return (
     <div className='container'>
-       {content}
+         {renderedPost}
     </div>
   )
 }

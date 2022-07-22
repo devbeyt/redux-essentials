@@ -1,64 +1,49 @@
-import { createSlice,createAsyncThunk,createEntityAdapter } from '@reduxjs/toolkit'
+import { createSlice,nanoid,createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const limit = 15;
+// const limit = 50;
 
-const POST_URL = `https://jsonplaceholder.typicode.com/posts/`
+const POST_URL = `https://jsonplaceholder.typicode.com/posts`
 
-const postsAdapter = createEntityAdapter({
-     selectId:(item)=>item.id
-})
 
-const initialState = postsAdapter.getInitialState({
+const initialState = {
+  posts: [],
   status: 'idle',
   error: null
-})
+}
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await axios.get(`${POST_URL}?_limit${limit}`)
+  const response = await axios.get(`${POST_URL}`)
   return response.data
 })
-
-
-export const addPost = createAsyncThunk('posts/add', async (post) => {
-  const response = await fetch(POST_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(post)
-  });
-  return await response.json();
-});
-
-
-export const updatePost = createAsyncThunk('post/update', async (post) => {
-  const response = await fetch(`${POST_URL}${post.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(post)
-  });
-  return await response.json();
-});
-
-
-export const deletePost = createAsyncThunk('posts/delete', async (postId) => {
-  const response = await fetch(`${POST_URL}${postId}`, {
-    method: 'DELETE'
-  });
-  return await response.json();
-});
-
 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-       postAdded: postsAdapter.addOne,
-       postUpdated: postsAdapter.updateOne,
-       postDeleted: postsAdapter.removeOne,
+    postAdded: {
+      reducer(state, action) {    // add
+        state.posts.push(action.payload)
+      },
+      prepare(title, content,userId) {  // update
+        return {
+          payload: {
+            id: nanoid(),
+            title,
+            content,
+            user:userId,
+          }
+        }
+      },
+      postUpdated(state, action) {
+        const { id, title, content } = action.payload
+        const existingPost = state.posts.find(post => post.id === id)
+        if (existingPost) {
+          existingPost.title = title
+          existingPost.content = content
+        }
+      }
+    }
   },
 
   extraReducers: {
@@ -67,7 +52,7 @@ const postsSlice = createSlice({
      },
      [fetchPosts.fulfilled]:(state,action)=>{
          state.status = 'succeeded'
-         postsAdapter.setAll(state,action.payload)
+         state.posts = state.posts.concat(action.payload)
     },
     [fetchPosts.rejected]:(state,action)=>{
          state.status = 'failed'
@@ -76,11 +61,7 @@ const postsSlice = createSlice({
   }
 })
 
-export const {
-  selectAll,
-  selectById,
-  selectIds,
-  selectTotal,
-} = postsAdapter.getSelectors(state => state.posts)
-export const {postAdded,postUpdated,postDeleted} = postsSlice.actions;
+
+export const {postAdded,postUpdated} = postsSlice.actions;
+export const selectAllPosts = state=>state.posts.posts
 export default postsSlice.reducer

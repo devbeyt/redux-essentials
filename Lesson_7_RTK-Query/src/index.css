@@ -10,7 +10,6 @@ body
     margin: 0 auto;
 }
 
-
 .text-center
 {
     text-align: center;
@@ -71,16 +70,7 @@ body
     border-bottom: 1px solid gray;
 }
 
-.total
-{
-    color: red;
-    display: inline-block;
-}
 
-.delete_button
-{
-    background-color: red;
-    color: white;
-}
+
 
 
